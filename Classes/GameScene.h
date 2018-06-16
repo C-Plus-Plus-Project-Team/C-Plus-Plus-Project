@@ -4,11 +4,13 @@
 #include "cocos2d.h"
 #include "MainScene.h"
 #include "Soldier.h"
+#include "Tank.h"
 
 class GameScene : public cocos2d::Layer
 {
 	cocos2d::TMXTiledMap* _tileMap;
 	Soldier *_player;
+	Tank *tank;
 	Vec2 touchLocation;
 public:
 	// there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -24,6 +26,9 @@ public:
 	virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
 
 	void update(float dt); //detle time
+	//tank
+	void newtank();
+	void movetank(float px, float py);
 
 	// implement the "static create()" method manually
 	CREATE_FUNC(GameScene);

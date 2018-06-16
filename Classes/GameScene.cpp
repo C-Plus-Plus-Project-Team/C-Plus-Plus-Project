@@ -33,16 +33,20 @@ bool GameScene::init()
 	_tileMap = TMXTiledMap::create("map/MiddleMap.tmx");
 	addChild(_tileMap, 0, 100);
 
+	//add soldier
 	TMXObjectGroup* group = _tileMap->getObjectGroup("objects");
 	ValueMap spawnPoint = group->getObject("soldier");
 
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
 
-	//_player = Sprite::create("ninja.png");
 	_player = Soldier::create();
 	_player->setPosition(Vec2(x+200, y+200));
 	addChild(_player, 2, 200);
+
+	newtank();
+
+
 
 	setTouchEnabled(true);
 	//设置为单点触
@@ -89,6 +93,7 @@ void GameScene::onTouchEnded(Touch *touch, Event *event)
 	touchLocation = touch->getLocation();
 	log("touchLocation (%f ,%f) ", touchLocation.x, touchLocation.y);
 
+	//移动士兵
 	Vec2 playerPos = _player->getPosition();
 	diff = touchLocation - playerPos;
 	_player->diff[0] = diff.x;
@@ -115,5 +120,37 @@ void GameScene::onTouchEnded(Touch *touch, Event *event)
 
 		}
 	
+		//move tank
+		movetank(touchLocation.x, touchLocation.y);
+
 	log("playerPos (%f ,%f) ", playerPos.x, playerPos.y);
+}
+
+//newtank
+void GameScene::newtank() {
+	tank = Tank::create();
+	tank->setPosition(500, 200);
+	addChild(tank);
+}
+
+//move tank
+void GameScene::movetank(float px, float py)
+{
+	Vec2 tankPos = tank->getPosition();
+	diff = touchLocation - tankPos;
+	tank->diff[0] = diff.x;
+	tank->diff[1] = diff.y;
+
+	if (diff.x > 0) {
+		tank->isLeft = false;
+	}
+	else
+		tank->isLeft = true;
+
+	tank->setScaleX(tank->isLeft ? 1 : -1);
+
+	float v = sqrt(diff.x * diff.x + diff.y * diff.y) / 100 ;
+
+	tank->runAction( MoveBy::create(v, Vec2(diff.x, diff.y)));
+
 }
