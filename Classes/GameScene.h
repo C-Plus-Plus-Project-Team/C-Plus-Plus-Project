@@ -4,31 +4,50 @@
 #include "cocos2d.h"
 #include "MainScene.h"
 #include "Soldier.h"
-#include "Tank.h"
+//#include "Tank.h"
 
 class GameScene : public cocos2d::Layer
 {
 	cocos2d::TMXTiledMap* _tileMap;
 	Soldier *_player;
 	Tank *tank;
-	Vec2 touchLocation;
+	Dog *dog;
+	//Vec2 touchLocation;
 public:
 	// there's no 'id' in cpp, so we recommend returning the class instance pointer
 	static cocos2d::Scene* createScene();
 
-	Vec2 diff;
-
 	// Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
 	virtual bool init();
+	void update(float dt); //detle time
 
 	virtual bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
 	virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
 	virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
-
-	void update(float dt); //detle time
+	
 	//tank
 	void newtank();
-	void movetank(float px, float py);
+	void movetank();
+
+	//police dog
+	void newdog();
+	void movedog();
+
+	//soldier
+	void newsoldier();
+	void movesoldier();
+
+	int dogCount;//警犬数量
+	int tankCount;//坦克数量
+	int count;
+
+	Vec2 startpos;//储存初始位置
+	Vec2 mappos;//储存地图位置
+	Vec2 mouseDownPosition;//第一次点鼠标时鼠标的位置
+	Vec2 mouseUpPosition;//鼠标抬起时的位置
+	static cocos2d::Vector<Dog*> vec_chosed_dog;//存储我方选中policeDog的容器
+	static cocos2d::Vector<Tank*> vec_chosed_tank;//存储我方选中tank的容器
+	static cocos2d::Vector<Soldier*> vec_chosed_soldier;//存储我方选中soldier的容器
 
 	// implement the "static create()" method manually
 	CREATE_FUNC(GameScene);

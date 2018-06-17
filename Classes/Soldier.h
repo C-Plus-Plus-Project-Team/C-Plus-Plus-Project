@@ -9,27 +9,27 @@ public:
 	bool init();
 	bool isLeft;
 	void idle();
-	void down();
-	void jump();
-	void runLeft(float dt);
-	void runRight(float dt);
-	void runUp(float dt);
-	void runDown(float dt);
-
-	float diff[2];
 	
-	bool isDown;
-	bool isrunUp;
-	bool isrunLeft;
-	bool isrunRight;
-	bool isrunDown;
-
 	void runAnimation();
 	Sprite* sp;
-
 	Action* run;
+};
 
-	void update(float dt);
+class Tank :public Sprite {
 
+public:
+	CREATE_FUNC(Tank);
+	bool init();
+	bool isLeft;
 
 };
+
+class Dog :public Sprite {
+
+public:
+	CREATE_FUNC(Dog);
+	bool init();
+	bool isLeft;
+
+};
+
