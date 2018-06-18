@@ -4,6 +4,7 @@ USING_NS_CC;
 Vector<Dog*> policeDog;
 Vector<Tank*> tank_vec;
 Vector<Soldier*>soldier_vec;
+Vector<Test*>test_vec;
 
 Vector<Dog*> GameScene::vec_chosed_dog;
 Vector<Tank*> GameScene::vec_chosed_tank;
@@ -52,7 +53,9 @@ bool GameScene::init()
 	setTouchEnabled(true);
 	//设置为单点触
 	setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
-	//setTouchMode(Touch::DispatchMode::ALL_AT_ONCE);
+	
+	//onEnter();
+	newtest();
 
 	scheduleUpdate();
 
@@ -64,13 +67,59 @@ bool GameScene::init()
 void GameScene::update(float dt) {
 	count++;
 	
+	//对选中对象进行攻击
+	if ((vec_chosed_soldier.size() || vec_chosed_tank.size() || vec_chosed_dog.size())
+		&& test->attacked && (count % 50 == 0))
+	{
+		for (int j = 0; j < vec_chosed_soldier.size(); j++)
+		{
+			_player = vec_chosed_soldier.at(j);
+			_player->fireAnimation();
+
+			test->hp--;
+		}
+
+
+		for (int i = 0; i < vec_chosed_tank.size(); i++)
+		{
+			tank = vec_chosed_tank.at(i);
+			tank->fireAnimation();
+
+			test->hp--;
+		}
+
+		//_player->fireAnimation();
+		//tank->fireAnimation();
+	}
+
+	if (test->hp == 0 && test->attacked == true) {
+		test->attacked = false;
+
+		for ( int j = 0; j < vec_chosed_soldier.size(); j++)
+		{
+			_player = vec_chosed_soldier.at(j);
+			_player->idle();
+		}
+
+
+		for ( int i = 0; i < vec_chosed_tank.size(); i++)
+		{
+			tank = vec_chosed_tank.at(i);
+			tank->idle();
+		}
+
+		test->removeFromParent();
+		//test_vec.eraseObject(test_vec.at(0));
+	}
+
+	//判断选中士兵是否到达指定位置
 	if (vec_chosed_soldier.size())
 	{
 		for (int j = 0; j < vec_chosed_soldier.size(); j++)
 		{
 			_player = vec_chosed_soldier.at(j);
 			Vec2 playerPos = _player->getPosition();
-			if (playerPos.x == (mouseUpPosition.x + j * 40))
+			if (playerPos.x == (mouseUpPosition.x + j * 50))
 			{
 				_player->idle();
 			}
@@ -85,6 +134,41 @@ void GameScene::update(float dt) {
 		newsoldier();
 }
 
+/* 
+void GameScene::onEnter()
+{
+	Layer::onEnter();
+	auto listener = EventListenerMouse::create();
+
+	listener->onMouseMove = [](Event * event)
+	{
+		EventMouse * e = (EventMouse *)event;
+		
+	};
+	listener->onMouseScroll = [](Event * event)
+	{
+		EventMouse * e = (EventMouse *)event;
+	
+	};
+	listener->onMouseDown = []( Event * event)
+	{
+		EventMouse * e = (EventMouse *)event;
+		log("onTouchBegan");
+		mouseDownPosition = e->getLocation();
+		//return true;
+		
+	};
+	listener->onMouseUp = [](Event * event)
+	{
+		EventMouse * e = (EventMouse *)event;
+
+	};
+
+	EventDispatcher * eventDispatcher = Director::getInstance()->getEventDispatcher();
+
+	eventDispatcher->addEventListenerWithGraphPriority(listener, this);
+}
+*/
 
 bool GameScene::onTouchBegan(Touch* touch, Event* event)
 {
@@ -110,12 +194,29 @@ void GameScene::onTouchEnded(Touch *touch, Event *event)
 	//如果按下和松开几乎是在同一个位置
 	if (sqrt(pow((mouseUpPosition.x - mouseDownPosition.x), 2) + pow((mouseUpPosition.y - mouseDownPosition.y), 2)) <= 5)
 	{
-		//move sodier
-		movesoldier();
-		//move tank
-		movetank();
-		//move police dog
-		movedog();
+		float rectX = mouseDownPosition.x;
+		float rectY = mouseDownPosition.y;
+		Rect mouseRect(rectX - 100 , rectY - 100 , 200, 200);
+
+		//判断所点位置是否有敌军
+		if (test_vec.at(0)->getBoundingBox().intersectsRect(mouseRect)  && 
+			(vec_chosed_soldier.size() || vec_chosed_tank.size() || vec_chosed_dog.size()))
+		{
+			test_vec.at(0)->attacked = true;
+			//move police dog
+			movedog();
+			log("attck success");
+		}
+		else {
+			//move sodier
+			movesoldier();
+			//move tank
+			movetank();
+			//move police dog
+			movedog();
+		}
+		
+
 
 	}
 	else//按下松开不在同一位置（即框选）
@@ -140,6 +241,7 @@ void GameScene::onTouchEnded(Touch *touch, Event *event)
 					Texture2D* textureYes = Director::getInstance()->getTextureCache()->addImage("CloseNormal.png");
 					policeDog.at(i)->setTexture(textureYes);
 					vec_chosed_dog.pushBack(policeDog.at(i));
+					log("slect success");
 				}
 				else
 				{
@@ -191,6 +293,7 @@ void GameScene::onTouchEnded(Touch *touch, Event *event)
 
 	}
 }
+
 
 //newtank
 void GameScene::newtank() {
@@ -312,6 +415,15 @@ void GameScene::movesoldier()
 
 		float v = sqrt(diff.x * diff.x + diff.y * diff.y) / 150;
 
-		_player->runAction(MoveBy::create(v, Vec2(diff.x + j * 40, diff.y)));
+		_player->runAction(MoveBy::create(v, Vec2(diff.x + j * 50, diff.y)));
 	}
+}
+
+//new test
+void GameScene::newtest() {
+	test = Test::create();
+	test->setPosition(400, 300);
+	addChild(test);
+	test_vec.pushBack(test);
+
 }

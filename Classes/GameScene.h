@@ -12,6 +12,7 @@ class GameScene : public cocos2d::Layer
 	Soldier *_player;
 	Tank *tank;
 	Dog *dog;
+	Test *test;
 	//Vec2 touchLocation;
 public:
 	// there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -20,10 +21,14 @@ public:
 	// Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
 	virtual bool init();
 	void update(float dt); //detle time
-
+	//void onEnter();
 	virtual bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
 	virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
 	virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
+
+	/*virtual bool onMouseDown(cocos2d::Touch* touch, cocos2d::Event* event);
+	virtual void onMouseMove(cocos2d::Touch *touch, cocos2d::Event *event);
+	virtual void onMouseUp(cocos2d::Touch *touch, cocos2d::Event *event);*/
 	
 	//tank
 	void newtank();
@@ -36,6 +41,9 @@ public:
 	//soldier
 	void newsoldier();
 	void movesoldier();
+
+	//test
+	void newtest();
 
 	int dogCount;//警犬数量
 	int tankCount;//坦克数量
