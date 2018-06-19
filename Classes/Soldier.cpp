@@ -115,7 +115,7 @@ bool Dog::init() {
 bool Test::init() {
 	Sprite::init();
 	attacked = false;
-	hp = 20;
+	hp = 500;
 
 	Vector<SpriteFrame*>allFrames;
 

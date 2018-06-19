@@ -13,6 +13,8 @@ class GameScene : public cocos2d::Layer
 	Tank *tank;
 	Dog *dog;
 	Test *test;
+	ProgressTimer *timm;
+	Sprite *blood;
 	//Vec2 touchLocation;
 public:
 	// there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -44,6 +46,9 @@ public:
 
 	//test
 	void newtest();
+
+	//blood reservoir
+	void blood_reservoir();
 
 	int dogCount;//警犬数量
 	int tankCount;//坦克数量

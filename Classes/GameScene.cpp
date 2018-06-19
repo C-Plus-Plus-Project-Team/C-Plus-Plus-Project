@@ -1,14 +1,14 @@
 #include "GameScene.h"
 
 USING_NS_CC;
-Vector<Dog*> policeDog;
-Vector<Tank*> tank_vec;
-Vector<Soldier*>soldier_vec;
-Vector<Test*>test_vec;
+Vector<Dog*> policeDog;//储存警犬的vector
+Vector<Tank*> tank_vec;//储存坦克的vector
+Vector<Soldier*>soldier_vec;//储存大兵的vector
+Vector<Test*>test_vec;//储存被攻击目标的vector
 
-Vector<Dog*> GameScene::vec_chosed_dog;
-Vector<Tank*> GameScene::vec_chosed_tank;
-Vector<Soldier*>GameScene::vec_chosed_soldier;
+Vector<Dog*> GameScene::vec_chosed_dog;//储存选中警犬的vector
+Vector<Tank*> GameScene::vec_chosed_tank;//储存选中坦克的vector
+Vector<Soldier*>GameScene::vec_chosed_soldier;//储存选中大兵的vector
 
 Scene* GameScene::createScene()
 {
@@ -37,25 +37,23 @@ bool GameScene::init()
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
+	//生成地图
 	_tileMap = TMXTiledMap::create("map/MiddleMap.tmx");
 	addChild(_tileMap, 0, 100);
 	startpos = _tileMap->getPosition();
 	mappos = startpos;
 
-	//newsoldier();
-	//newtank();
-	//newdog();
 	count = 0;
 	dogCount = 6;
 	tankCount = 3;
 	
 	setTouchEnabled(true);
-	//设置为单点触
+	//设置为单点触控
 	setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
 	
 	//onEnter();
 	newtest();
+	//blood_reservoir();
 
 	scheduleUpdate();
 
@@ -66,33 +64,36 @@ bool GameScene::init()
 
 void GameScene::update(float dt) {
 	count++;
-	
-	//对选中对象进行攻击
+	if (count > 1000000) count = 0;
+
+
+	//对选中敌军进行攻击
 	if ((vec_chosed_soldier.size() || vec_chosed_tank.size() || vec_chosed_dog.size())
-		&& test->attacked && (count % 50 == 0))
+		&& test->attacked && (count % 6 == 0))
 	{
+		//我方选中士兵进行fireAnimation
 		for (int j = 0; j < vec_chosed_soldier.size(); j++)
 		{
 			_player = vec_chosed_soldier.at(j);
 			_player->fireAnimation();
-
 			test->hp--;
 		}
 
-
+		//我方选中坦克进行fireAnimation
 		for (int i = 0; i < vec_chosed_tank.size(); i++)
 		{
 			tank = vec_chosed_tank.at(i);
 			tank->fireAnimation();
-
 			test->hp--;
 		}
 
-		//_player->fireAnimation();
-		//tank->fireAnimation();
+		//更新血槽参数
+		timm->setPercentage((500 - test->hp) / 5);
+		//timm->setPercentage(timm->getPercentage() + 0.1);
+		
 	}
-
-	if (test->hp == 0 && test->attacked == true) {
+	//判断敌军是否over，if（over），then停止fireAnimation并清除敌军
+	if (test->hp < 0 && test->attacked == true) {
 		test->attacked = false;
 
 		for ( int j = 0; j < vec_chosed_soldier.size(); j++)
@@ -101,7 +102,6 @@ void GameScene::update(float dt) {
 			_player->idle();
 		}
 
-
 		for ( int i = 0; i < vec_chosed_tank.size(); i++)
 		{
 			tank = vec_chosed_tank.at(i);
@@ -109,7 +109,8 @@ void GameScene::update(float dt) {
 		}
 
 		test->removeFromParent();
-		//test_vec.eraseObject(test_vec.at(0));
+		timm->removeFromParent();
+		blood->removeFromParent();
 	}
 
 	//判断选中士兵是否到达指定位置
@@ -126,6 +127,7 @@ void GameScene::update(float dt) {
 		}
 	}
 	
+	//产生dog、tank、soldier
 	if (count % 90 == 0 && policeDog.size() < dogCount)
 		newdog();
 	if (count % 90 == 0 && tank_vec.size() < tankCount)
@@ -134,7 +136,7 @@ void GameScene::update(float dt) {
 		newsoldier();
 }
 
-/* 
+/* 暂时无用
 void GameScene::onEnter()
 {
 	Layer::onEnter();
@@ -170,18 +172,19 @@ void GameScene::onEnter()
 }
 */
 
+//触摸开始
 bool GameScene::onTouchBegan(Touch* touch, Event* event)
 {
 	log("onTouchBegan");
 	mouseDownPosition = touch->getLocation();
 	return true;
 }
-
+//触摸移动
 void GameScene::onTouchMoved(Touch *touch, Event *event)
 {
 	log("onTouchMoved");
 }
-
+//触摸停止
 void GameScene::onTouchEnded(Touch *touch, Event *event)
 {
 	EventMouse* e = (EventMouse*)event;
@@ -203,6 +206,8 @@ void GameScene::onTouchEnded(Touch *touch, Event *event)
 			(vec_chosed_soldier.size() || vec_chosed_tank.size() || vec_chosed_dog.size()))
 		{
 			test_vec.at(0)->attacked = true;
+
+			blood_reservoir();
 			//move police dog
 			movedog();
 			log("attck success");
@@ -294,6 +299,32 @@ void GameScene::onTouchEnded(Touch *touch, Event *event)
 	}
 }
 
+
+
+//blood resevoir产生血槽及其动画
+void GameScene::blood_reservoir()
+{
+	auto s = Sprite::create("blood/bloodReservoir1.png");
+	s->setAnchorPoint(Vec2(0.5, 0));
+	//test_vec.at(0)
+	Vec2 enemyPos = test_vec.at(0)->getPosition();
+	//s->setPosition(Vec2(mouseUpPosition.x, mouseUpPosition.y + 50));
+	s->setPosition(Vec2(enemyPos.x, enemyPos.y + 50));
+	addChild(s);
+	blood = s;
+
+	CCSprite *sp = CCSprite::create("blood/bloodReservoir2.png");
+	timm = CCProgressTimer::create(sp);//创建CCProgressTimer
+
+	timm->setAnchorPoint(Vec2(0.5, 0));
+	timm->setPosition(Vec2(enemyPos.x, enemyPos.y + 50));
+	//timm->setPosition(mouseUpPosition.x, mouseUpPosition.y + 50);//设置CCProgressTimer位置
+	timm->setType(kCCProgressTimerTypeBar);//设置类型
+	timm->setPercentage(0);//设置当前初始值
+	timm->setMidpoint(CCPoint(1, 0));//设置进度开始的位置
+	timm->setBarChangeRate(CCPoint(1, 0));//设置进度所占比例
+	addChild(timm);//添加到 layer
+}
 
 //newtank
 void GameScene::newtank() {
