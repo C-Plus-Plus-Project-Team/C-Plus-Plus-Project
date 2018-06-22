@@ -4,6 +4,8 @@
 bool Soldier::init() {
 	Sprite::init();
 	isLeft = false;
+	attacked = false;
+	hp = 500;
 	idle();
 
 	return true;
@@ -47,19 +49,10 @@ void Soldier::fireAnimation() {
 
 bool Tank::init() {
 	Sprite::init();
+	attacked = false;
+	hp = 500;
+
 	idle();
-
-	/*Vector<SpriteFrame*>allFrames;
-
-	SpriteFrame* sf = SpriteFrame::create("Tank2.png", Rect(0, 0, 130, 80));
-	allFrames.pushBack(sf);
-	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
-
-	auto s = Sprite::create();
-	s->runAction(RepeatForever::create(Animate::create(ani)));
-	s->setAnchorPoint(Vec2(0.5, 0.5));
-	addChild(s);
-	sptank = s;*/
 
 	return true;
 }
@@ -97,6 +90,8 @@ void Tank::fireAnimation() {
 
 bool Dog::init() {
 	Sprite::init();
+	attacked = false;
+	hp = 500;
 
 	Vector<SpriteFrame*>allFrames;
 
@@ -132,3 +127,223 @@ bool Test::init() {
 }
 
 
+bool Base::init() {
+	Sprite::init();
+
+	auto s = Sprite::create("base/base-0.png");
+	s->setAnchorPoint(Vec2(0.5, 0.5));
+	this->addChild(s);
+	sp = s;
+
+	return true;
+}
+
+//base buildingAnimation
+void Base::buildingAnimation() {
+	Vector<SpriteFrame*>allFrames;
+	char txt[100] = {};
+	for (int i = 1; i < 30; i++) {
+		//sprintf_s(txt, "base/fire000%d.png", i);
+		sprintf_s(txt, "base/base-%d.png", i);
+		SpriteFrame* sf = SpriteFrame::create(txt, Rect(0, 0, 275, 184));
+		sf->setAnchorPoint(Vec2(0.5, 0.5));
+
+		allFrames.pushBack(sf);
+	}
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+	run = sp->runAction(Repeat::create(Animate::create(ani),1));
+
+}
+
+
+bool Explode::init() {
+	Sprite::init();
+
+	auto s = Sprite::create("explode/explode-1.png");
+	s->setAnchorPoint(Vec2(0.5, 0.5));
+	this->addChild(s);
+	sp = s;
+
+	return true;
+}
+
+//explode Animation
+void Explode::explodeAnimation() {
+	Vector<SpriteFrame*>allFrames;
+	char txt[100] = {};
+	for (int i = 1; i < 18; i++) {
+		//sprintf_s(txt, "base/fire000%d.png", i);
+		sprintf_s(txt, "explode/explode-%d.png", i);
+		SpriteFrame* sf = SpriteFrame::create(txt, Rect(0, 0, 165, 184));
+		sf->setAnchorPoint(Vec2(0.5, 0.5));
+
+		allFrames.pushBack(sf);
+	}
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+	run = sp->runAction(Repeat::create(Animate::create(ani), 1 ));
+
+}
+
+
+//菜单功能
+//坦克兵
+bool tankbing::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/tankmenu.png", Rect(0, 0, 82, 65));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}
+
+//坦克工厂
+bool tankgongchang::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/redalert0.0.png", Rect(0, 0, 82, 66));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}
+
+//白色的cs计时
+bool whitecd::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/white.png", Rect(0, 0, 82, 66));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}
+
+//菜单框
+bool caidankuang::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/caidankuang.png", Rect(0, 0, 211, 595));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}
+
+//兵工厂
+bool bubinggongchang::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/bingying1.png", Rect(0, 0, 82, 66));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}
+
+//发电厂
+bool fadianchang::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/dianchang1.png", Rect(0, 0, 82, 66));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}
+
+//石油厂
+bool shiyouchang::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/redalert0.2.png", Rect(0, 0, 82, 66));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}
+
+//士兵
+bool bubing::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/soldier1.png", Rect(0, 0, 82, 66));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}
+
+//警犬
+bool jingquan::init() {
+	Sprite::init();
+
+	Vector<SpriteFrame*>allFrames;
+
+	SpriteFrame* sf = SpriteFrame::create("menu/policeDog1.png", Rect(0, 0, 82, 66));
+	allFrames.pushBack(sf);
+	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
+
+	auto sp = Sprite::create();
+	sp->runAction(RepeatForever::create(Animate::create(ani)));
+	sp->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sp);
+
+	return true;
+}

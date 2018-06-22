@@ -75,7 +75,7 @@ bool MainScene::init()
 	{
 		SimpleAudioEngine::getInstance()->playBackgroundMusic("pal4.mp3", true);
 	}
-
+	thread_();
 	return true;
 }
 
