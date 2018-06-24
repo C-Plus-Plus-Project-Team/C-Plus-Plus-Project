@@ -111,18 +111,9 @@ bool Test::init() {
 	Sprite::init();
 	attacked = false;
 	hp = 500;
-
-	Vector<SpriteFrame*>allFrames;
-
-	SpriteFrame* sf = SpriteFrame::create("test.png", Rect(0, 0, 200, 173));
-	allFrames.pushBack(sf);
-	Animation* ani = Animation::createWithSpriteFrames(allFrames, 0.1);
-
-	auto sp = Sprite::create();
-	sp->runAction(RepeatForever::create(Animate::create(ani)));
-	sp->setAnchorPoint(Vec2(0.5, 0.5));
-	addChild(sp);
-
+	Sprite* sf = Sprite::create("test.png", Rect(0, 0, 200, 173));
+	sf->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(sf);
 	return true;
 }
 

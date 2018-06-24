@@ -72,6 +72,8 @@ void write(char c,char ch[12], float a, float b)
 	memcpy(msg.body(), write_message, msg.body_length());
 	msg.encode_header();
 	sock.send(buffer(msg.data(), msg.length()));//同步发送数据
+
+	//cocos2d::log(" send   3  %c %s %.2f %.2f", c, ch, a, b);
 }
 
 void read()//读取数据
@@ -90,6 +92,7 @@ void read()//读取数据
 		{
 			read(sock, buffer(read_message.body(), read_message.body_length() - 1));
 			sscanf_s(read_message.body(), "%c %f %f",&p,sizeof(p), &a__, &b__);
+			cocos2d::log("clinet read  1 ");
 		}
 		else if (ch_[0] == '2')//框选
 		{
@@ -100,6 +103,7 @@ void read()//读取数据
 		{
 			read(sock, buffer(read_message.body(), read_message.body_length() - 1));
 			sscanf_s(read_message.body(), "%c %s %f %f", &p,sizeof(p),msg, sizeof(msg), &j, &k);
+			cocos2d::log("clinet read 3 %c %s %f %f", p, msg, j, k);
 		}
 		else;
 	}

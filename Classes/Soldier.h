@@ -43,6 +43,7 @@ public:
 	int hp;
 	bool attacked;
 
+
 };
 
 class Test :public Sprite {

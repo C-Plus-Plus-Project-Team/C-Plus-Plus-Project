@@ -5,6 +5,7 @@
 #include "MainScene.h"
 #include "Soldier.h"
 #include "systemheader.h"
+#include "gameover.h"
 
 class GameScene : public cocos2d::Layer
 {
@@ -14,10 +15,13 @@ class GameScene : public cocos2d::Layer
 	Dog *dog;
 	Test *test;
 	ProgressTimer *timm;
+	ProgressTimer *base_timm;
 	Sprite *blood;
+	Sprite *baseblood;
 	Base *base;
 	Base *enemy_base;
 	Explode *explode;
+	CCSprite *bloodsp;
 	//Vec2 touchLocation;
 public:
 	// there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -34,7 +38,13 @@ public:
 	/*virtual bool onMouseDown(cocos2d::Touch* touch, cocos2d::Event* event);
 	virtual void onMouseMove(cocos2d::Touch *touch, cocos2d::Event *event);
 	virtual void onMouseUp(cocos2d::Touch *touch, cocos2d::Event *event);*/
-	
+	virtual void onEnter();//添加键盘事件
+	virtual void onExit();//清除键盘事件
+
+	void upAndDown_map(int j); //使地图上下移一定距离，在键盘事件里调用
+	void leftAndRight_map(int j);//使地图左右移一定距离，在键盘事件里调用
+
+
 	//tank
 	void newtank();//产生坦克
 	void movetank();//移动我方坦克
@@ -64,8 +74,11 @@ public:
 	//分析敌方鼠标框选区域信息
 	void enemySelectArea(float dx, float dy, float ux, float uy);
 
+	void cleanbuilding(float x, float y);
+
 	//blood reservoir
 	void blood_reservoir( Vec2 enemyPos);
+	void base_blood(Vec2 basePos);
 	//explode GIF
 	void explodeGIF( Vec2 Pos);
 
@@ -73,12 +86,16 @@ public:
 	int tankCount;//坦克数量
 	int count;
 	int explodetime;//爆炸效果所持续时间
+	int HP;
+	int base_expolde;
 	
 	bool iftocreatemenu;
 	bool buildbase;
 	bool enemy_buildbase;
 	bool canmove;
 	bool addbuilding;
+	bool gameover;
+	bool attack_base;
 
 	Vec2 startpos;//储存初始位置
 	Vec2 mappos;//储存地图位置

@@ -1,5 +1,7 @@
 #include "SimpleAudioEngine.h"
 #define SOUND_KEY "sound_key"
+#include <string>
+using namespace std;
 void connect();
 void write(char c,float a, float b);
 void write(char e,float a, float b, float c, float d);
@@ -18,4 +20,5 @@ extern char msg[10];
 extern bool whether_read;
 extern char ch_[1];
 extern char player;
-
+extern string str1;
+extern bool whetherWin;
