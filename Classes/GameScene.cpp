@@ -104,7 +104,7 @@ bool GameScene::init()
 	//newtest();
 	//blood_reservoir();
 
-	player = '1';
+	
 	if (player == '1') {
 		base = Base::create();
 		base->setPosition(100, 120);
