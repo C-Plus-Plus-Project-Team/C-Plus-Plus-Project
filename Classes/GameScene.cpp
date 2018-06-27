@@ -241,7 +241,7 @@ void GameScene::update(float dt)
 
 	}
 	
-	if (attack_base)
+	if (attack_base && count%3 == 0)
 	{
 		//我方选中士兵进行fire
 		for (int j = 0; j < vec_chosed_soldier.size(); j++)
@@ -1136,20 +1136,21 @@ void GameScene::base_blood(Vec2 basePos)
 	s->setAnchorPoint(Vec2(0.5, 0.5));
 	log("CREATE BLOOD SUCCESS");
 	
-	s->setPosition(Vec2(basePos.x -100, basePos.y - 30));
-	base->addChild(s);
+	s->setPosition(Vec2(basePos.x, basePos.y + 50));
+	addChild(s);
 	baseblood = s;
 
 	CCSprite *sp = CCSprite::create("blood/bloodReservoir2.png");
 	base_timm = CCProgressTimer::create(sp);//创建CCProgressTimer
 
 	base_timm->setAnchorPoint(Vec2(0.5, 0.5));
-	base_timm->setPosition(Vec2(basePos.x -100, basePos.y -30));
+	base_timm->setPosition(Vec2(basePos.x, basePos.y +50));
 	base_timm->setType(kCCProgressTimerTypeBar);//设置类型
 	base_timm->setPercentage(0);//设置当前初始值
 	base_timm->setMidpoint(CCPoint(1, 0));//设置进度开始的位置
 	base_timm->setBarChangeRate(CCPoint(1, 0));//设置进度所占比例
-	base->addChild(base_timm);//添加到 layer
+	addChild(base_timm);//添加到 layer
+	//base->addChild(base_timm);//添加到 layer
 }
 
 //爆炸动画
